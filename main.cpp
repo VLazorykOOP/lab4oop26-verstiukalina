@@ -1188,6 +1188,50 @@ void Task1() {
     testVektorKlaviatura();
 }
 
+void testTelefonFile() {
+    ifstream fin("input.txt");
+    if (!fin) {
+        cout << "Помилка відкриття файлу input.txt\n";
+        return;
+    }
+
+    int n = 0;
+    fin >> n;
+    EmailPhoneBook book(n);
+    fin >> book;
+    cout << "Дані з файлу:\n" << book;
+    cout << "Телефон для alina@gmail.com: " << book["alina@gmail.com"] << "\n";
+    cout << "Електронна пошта для +380671112233: " << book("+380671112233") << "\n";
+    cout << "CodeError: " << book.otrymatyKodPomylky() << "\n";
+}
+
+void testTelefonVypadkovo() {
+    EmailPhoneBook book(3);
+    book.stvorytyNabir();
+    cout << "Випадкові дані:\n" << book;
+    cout << "Пошук none@gmail.com: " << book["none@gmail.com"] << "\n";
+    cout << "CodeError: " << book.otrymatyKodPomylky() << "\n";
+}
+
+void testTelefonKlaviatura() {
+    int n;
+    cout << "Введіть кількість контактів: ";
+    cin >> n;
+    EmailPhoneBook book(n);
+    cout << "Введіть email і телефон:\n";
+    cin >> book;
+    cout << "Дані з клавіатури:\n" << book;
+    cout << "Телефон для user1@mail.com: " << book["user1@mail.com"] << "\n";
+    cout << "CodeError: " << book.otrymatyKodPomylky() << "\n";
+}
+
+void Task2() {
+    cout << "\nЗавдання 2. Електронна пошта і телефон\n";
+    testTelefonFile();
+    testTelefonVypadkovo();
+    testTelefonKlaviatura();
+}
+
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
@@ -1206,7 +1250,7 @@ int main() {
         if (choice == 1) {
             Task1();
         } else if (choice == 2) {
-            // Task2();
+            Task2();
         } else if (choice == 3) {
             // Task3();
         }
