@@ -1232,6 +1232,112 @@ void Task2() {
     testTelefonKlaviatura();
 }
 
+void testMatrytsiaFile() {
+    ifstream fin("matrix_input.txt");
+    if (!fin) {
+        cout << "Помилка відкриття файлу matrix_input.txt\n";
+        return;
+    }
+
+    int n = 0;
+    fin >> n;
+    Matrix3F m(n);
+    fin >> m;
+    cout << "Матриця з файлу:\n" << m;
+}
+
+void testMatrytsiaVypadkovo() {
+    Matrix3F m(3);
+    m.zapovnytyVypadkovo(-5, 5);
+    cout << "Випадкова матриця:\n" << m;
+}
+
+void testMatrytsiaKlaviatura() {
+    int n;
+    cout << "Введіть кількість рядків матриці: ";
+    cin >> n;
+    Matrix3F m(n);
+    cout << "Введіть по 3 числа для кожного рядка:\n";
+    cin >> m;
+    cout << "Матриця з клавіатури:\n" << m;
+}
+
+void testMatrytsiaOperatsii() {
+    Matrix3F a(3, 1, 2, 3);
+    Matrix3F b(3, 2);
+    Matrix3F c(3);
+    c[0] = Vector3F(1, 1, 1);
+    c[1] = Vector3F(2, 2, 2);
+    c[2] = Vector3F(3, 3, 3);
+    Vector3F v(2, 3, 4);
+
+    cout << "a:\n" << a;
+    cout << "b:\n" << b;
+    cout << "c:\n" << c;
+    cout << "++a:\n" << ++a;
+    cout << "b++:\n" << b++;
+    cout << "Після b++:\n" << b;
+    cout << "--c:\n" << --c;
+    cout << "-a:\n" << -a;
+    cout << "!a = " << (!a) << "\n";
+
+    Matrix3F d = a + b;
+    Matrix3F e = d - 1;
+    Matrix3F f = e * v;
+    Matrix3F g = f * 2.0;
+    Matrix3F h = g / 2;
+    Matrix3F i = h % 3;
+    Matrix3F j = a / b;
+    Matrix3F expr1 = ((((a + b) - 1) * v) * 2.0 / 2) % 5;
+    Matrix3F expr2 = (((a + 2.5) - (b - 1.0f)) * c) / b;
+
+    cout << "d = a + b:\n" << d;
+    cout << "e = d - 1:\n" << e;
+    cout << "f = e * v:\n" << f;
+    cout << "g = f * 2:\n" << g;
+    cout << "h = g / 2:\n" << h;
+    cout << "i = h % 3:\n" << i;
+    cout << "j = a / b:\n" << j;
+    cout << "expr1:\n" << expr1;
+    cout << "expr2:\n" << expr2;
+
+    a += b;
+    a += 1.5;
+    a -= c;
+    a -= 1.0f;
+    a *= b;
+    a *= v;
+    a *= 2.0;
+    a /= 2;
+    a /= 1.0;
+    a /= 1.0f;
+    a %= 5;
+
+    cout << "Після += -= *= /= %= :\n" << a;
+    cout << "a == b : " << (a == b) << "\n";
+    cout << "a != b : " << (a != b) << "\n";
+    cout << "b > c : " << (b > c) << "\n";
+    cout << "b >= c : " << (b >= c) << "\n";
+    cout << "c < b : " << (c < b) << "\n";
+    cout << "c <= b : " << (c <= b) << "\n";
+    cout << "m[1] = " << c[1] << "\n";
+    cout << "m[10] = " << c[10] << ", codeError = " << c.otrymatyKodPomylky() << "\n";
+    cout << "Сума елементів = " << a() << "\n";
+    cout << "Кількість матриць = " << Matrix3F::otrymatyKilnistMatryts() << "\n";
+
+    Matrix3F *p = new Matrix3F(2, 7);
+    cout << "Нова матриця:\n" << *p;
+    delete p;
+}
+
+void Task3() {
+    cout << "\nЗавдання 3. Matrix3F\n";
+    testMatrytsiaFile();
+    testMatrytsiaVypadkovo();
+    testMatrytsiaOperatsii();
+    testMatrytsiaKlaviatura();
+}
+
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
@@ -1252,7 +1358,7 @@ int main() {
         } else if (choice == 2) {
             Task2();
         } else if (choice == 3) {
-            // Task3();
+            Task3();
         }
     } while (choice != 0);
 
