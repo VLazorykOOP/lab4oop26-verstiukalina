@@ -1095,6 +1095,99 @@ ostream &operator<<(ostream &out, const Matrix3F &m) {
     return out;
 }
 
+void testVektorFile() {
+    ifstream fin("vector_input.txt");
+    if (!fin) {
+        cout << "Помилка відкриття файлу vector_input.txt\n";
+        return;
+    }
+
+    int n = 0;
+    fin >> n;
+    VectorShort a(n);
+    fin >> a;
+    cout << "Вектор з файлу: " << a << "\n";
+}
+
+void testVektorVypadkovo() {
+    VectorShort a(5);
+    a.zapovnytyVypadkovo(-10, 10);
+    cout << "Випадковий вектор: " << a << "\n";
+}
+
+void testVektorKlaviatura() {
+    int n;
+    cout << "Введіть розмір вектора: ";
+    cin >> n;
+    VectorShort a(n);
+    cout << "Введіть елементи вектора:\n";
+    cin >> a;
+    cout << "Вектор з клавіатури: " << a << "\n";
+}
+
+void testVektorOperatsii() {
+    VectorShort a(5, 2);
+    VectorShort b(5, 3);
+    VectorShort c(5);
+    c[0] = 1;
+    c[1] = 2;
+    c[2] = 3;
+    c[3] = 4;
+    c[4] = 5;
+
+    cout << "a = " << a << "\n";
+    cout << "b = " << b << "\n";
+    cout << "c = " << c << "\n";
+    cout << "++a = " << ++a << "\n";
+    cout << "b++ = " << b++ << "\n";
+    cout << "Після b++: " << b << "\n";
+    cout << "--c = " << --c << "\n";
+    cout << "~a = " << ~a << "\n";
+    cout << "-b = " << -b << "\n";
+    cout << "!a = " << (!a) << "\n";
+
+    VectorShort d = a + b;
+    VectorShort e = d - c;
+    VectorShort f = e * 2;
+    VectorShort g = f / 2;
+    VectorShort h = g % 3;
+    VectorShort i = (a | b) ^ (c & g);
+    VectorShort expr1 = (((b + c) - g) * 2 / 2) % 5;
+    VectorShort expr2 = (((~b | c) ^ (g & h)) + (-c)) - a;
+
+    cout << "d = " << d << "\n";
+    cout << "e = " << e << "\n";
+    cout << "f = " << f << "\n";
+    cout << "g = " << g << "\n";
+    cout << "h = " << h << "\n";
+    cout << "i = " << i << "\n";
+    cout << "expr1 = " << expr1 << "\n";
+    cout << "expr2 = " << expr2 << "\n";
+
+    cout << "a == b : " << (a == b) << "\n";
+    cout << "a != b : " << (a != b) << "\n";
+    cout << "b > c : " << (b > c) << "\n";
+    cout << "b >= c : " << (b >= c) << "\n";
+    cout << "b < g : " << (b < g) << "\n";
+    cout << "b <= g : " << (b <= g) << "\n";
+    cout << "c[2] = " << c[2] << "\n";
+    cout << "c[50] = " << c[50] << ", codeError = " << c.otrymatyKodPomylky() << "\n";
+    cout << "Сума g = " << g() << "\n";
+    cout << "Кількість об'єктів = " << VectorShort::otrymatyKilnistObiektiv() << "\n";
+
+    VectorShort *p = new VectorShort(3, 7);
+    cout << "Новий вектор = " << *p << "\n";
+    delete p;
+}
+
+void Task1() {
+    cout << "\nЗавдання 1. VectorShort\n";
+    testVektorFile();
+    testVektorVypadkovo();
+    testVektorOperatsii();
+    testVektorKlaviatura();
+}
+
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
@@ -1111,7 +1204,7 @@ int main() {
         cin >> choice;
 
         if (choice == 1) {
-            // Task1();
+            Task1();
         } else if (choice == 2) {
             // Task2();
         } else if (choice == 3) {
