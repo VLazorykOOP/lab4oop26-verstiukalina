@@ -506,6 +506,595 @@ ostream &operator<<(ostream &out, const EmailPhoneBook &book) {
     return out;
 }
 
+class Vector3F {
+private:
+    int a;
+    int b;
+    int c;
+
+public:
+    Vector3F(int x = 0, int y = 0, int z = 0) {
+        a = x;
+        b = y;
+        c = z;
+    }
+
+    Vector3F(const Vector3F &other) {
+        a = other.a;
+        b = other.b;
+        c = other.c;
+    }
+
+    Vector3F &operator=(const Vector3F &other) {
+        if (this != &other) {
+            a = other.a;
+            b = other.b;
+            c = other.c;
+        }
+        return *this;
+    }
+
+    Vector3F &operator++() { a++; b++; c++; return *this; }
+
+    Vector3F operator++(int) {
+        Vector3F temp(*this);
+        a++; b++; c++;
+        return temp;
+    }
+
+    Vector3F &operator--() { a--; b--; c--; return *this; }
+
+    Vector3F operator--(int) {
+        Vector3F temp(*this);
+        a--; b--; c--;
+        return temp;
+    }
+
+    Vector3F operator-() const
+    {
+        return Vector3F(-a, -b, -c);
+    }
+
+    Vector3F operator+(const Vector3F &other) const
+    {
+        return Vector3F(a + other.a, b + other.b, c + other.c);
+    }
+
+    Vector3F operator-(const Vector3F &other) const
+    {
+        return Vector3F(a - other.a, b - other.b, c - other.c);
+    }
+
+    Vector3F operator*(const Vector3F &other) const
+    {
+        return Vector3F(a * other.a, b * other.b, c * other.c);
+    }
+
+    Vector3F operator*(int value) const
+    {
+        return Vector3F(a * value, b * value, c * value);
+    }
+
+    Vector3F operator/(int value) const
+    {
+        if (value == 0) {
+            return *this;
+        }
+        return Vector3F(a / value, b / value, c / value);
+    }
+
+    Vector3F operator%(int value) const
+    {
+        if (value == 0) {
+            return *this;
+        }
+        return Vector3F(a % value, b % value, c % value);
+    }
+
+    bool operator==(const Vector3F &other) const
+    {
+        return a == other.a && b == other.b && c == other.c;
+    }
+
+    bool operator!=(const Vector3F &other) const
+    {
+        return !(*this == other);
+    }
+
+    bool operator>(const Vector3F &other) const
+    {
+        return a > other.a && b > other.b && c > other.c;
+    }
+
+    bool operator>=(const Vector3F &other) const
+    {
+        return a >= other.a && b >= other.b && c >= other.c;
+    }
+
+    bool operator<(const Vector3F &other) const
+    {
+        return a < other.a && b < other.b && c < other.c;
+    }
+
+    bool operator<=(const Vector3F &other) const
+    {
+        return a <= other.a && b <= other.b && c <= other.c;
+    }
+
+    int suma() const { return a + b + c; }
+
+    friend istream &operator>>(istream &in, Vector3F &v);
+    friend ostream &operator<<(ostream &out, const Vector3F &v);
+};
+
+istream &operator>>(istream &in, Vector3F &v) {
+    in >> v.a >> v.b >> v.c;
+    return in;
+}
+
+ostream &operator<<(ostream &out, const Vector3F &v) {
+    out << "(" << v.a << ", " << v.b << ", " << v.c << ")";
+    return out;
+}
+
+class Matrix3F {
+protected:
+    Vector3F *data;
+    int n;
+    int codeError;
+    static int count_matrix;
+
+    void stvoryty(int size, int x = 0, int y = 0, int z = 0) {
+        n = size;
+        codeError = 0;
+        if (n <= 0) {
+            data = NULL;
+            n = 0;
+            return;
+        }
+        data = new (nothrow) Vector3F[n];
+        if (!data) {
+            n = 0;
+            codeError = 1;
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            data[i] = Vector3F(x, y, z);
+        }
+    }
+
+public:
+    Matrix3F() {
+        data = NULL;
+        n = 0;
+        codeError = 0;
+        count_matrix++;
+    }
+
+    Matrix3F(int size) {
+        stvoryty(size, 0, 0, 0);
+        count_matrix++;
+    }
+
+    Matrix3F(int size, int value) {
+        stvoryty(size, value, value, value);
+        count_matrix++;
+    }
+
+    Matrix3F(int size, int x, int y, int z) {
+        stvoryty(size, x, y, z);
+        count_matrix++;
+    }
+
+    Matrix3F(const Matrix3F &other) {
+        stvoryty(other.n, 0, 0, 0);
+        codeError = other.codeError;
+        for (int i = 0; i < n; i++) {
+            data[i] = other.data[i];
+        }
+        count_matrix++;
+    }
+
+    ~Matrix3F() {
+        delete[] data;
+        count_matrix--;
+    }
+
+    int otrymatyRozmir() const { return n; }
+    int otrymatyKodPomylky() const { return codeError; }
+    static int otrymatyKilnistMatryts() { return count_matrix; }
+
+    void zapovnytyVypadkovo(int left, int right) {
+        for (int i = 0; i < n; i++) {
+            data[i] = Vector3F(
+                left + rand() % (right - left + 1),
+                left + rand() % (right - left + 1),
+                left + rand() % (right - left + 1));
+        }
+    }
+
+    Matrix3F &operator=(const Matrix3F &other) {
+        if (this != &other) {
+            delete[] data;
+            stvoryty(other.n, 0, 0, 0);
+            codeError = other.codeError;
+            for (int i = 0; i < n; i++) {
+                data[i] = other.data[i];
+            }
+        }
+        return *this;
+    }
+
+    Matrix3F &operator++() {
+        for (int i = 0; i < n; i++) {
+            ++data[i];
+        }
+        return *this;
+    }
+
+    Matrix3F operator++(int) {
+        Matrix3F temp(*this);
+        for (int i = 0; i < n; i++) {
+            data[i]++;
+        }
+        return temp;
+    }
+
+    Matrix3F &operator--() {
+        for (int i = 0; i < n; i++) {
+            --data[i];
+        }
+        return *this;
+    }
+
+    Matrix3F operator--(int) {
+        Matrix3F temp(*this);
+        for (int i = 0; i < n; i++) {
+            data[i]--;
+        }
+        return temp;
+    }
+
+    bool operator!() const { return n != 0; }
+
+    Matrix3F operator-() const
+    {
+        Matrix3F temp(*this);
+        for (int i = 0; i < n; i++) {
+            temp.data[i] = -temp.data[i];
+        }
+        return temp;
+    }
+
+    Vector3F &operator[](int index) {
+        if (index < 0 || index >= n) {
+            codeError = 2;
+            return data[n - 1];
+        }
+        codeError = 0;
+        return data[index];
+    }
+
+    const Vector3F &operator[](int index) const
+    {
+        if (index < 0 || index >= n) {
+            return data[n - 1];
+        }
+        return data[index];
+    }
+
+    int operator()() const
+    {
+        int s = 0;
+        for (int i = 0; i < n; i++) {
+            s += data[i].suma();
+        }
+        return s;
+    }
+
+    Matrix3F &operator+=(const Matrix3F &other) {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            data[i] = data[i] + other.data[i];
+        }
+        return *this;
+    }
+
+    Matrix3F &operator+=(double value) {
+        int x = (int)value;
+        for (int i = 0; i < n; i++) {
+            data[i] = data[i] + Vector3F(x, x, x);
+        }
+        return *this;
+    }
+
+    Matrix3F &operator+=(float value) {
+        return (*this += (double)value);
+    }
+
+    Matrix3F &operator-=(const Matrix3F &other) {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            data[i] = data[i] - other.data[i];
+        }
+        return *this;
+    }
+
+    Matrix3F &operator-=(double value) {
+        int x = (int)value;
+        for (int i = 0; i < n; i++) {
+            data[i] = data[i] - Vector3F(x, x, x);
+        }
+        return *this;
+    }
+
+    Matrix3F &operator-=(float value) {
+        return (*this -= (double)value);
+    }
+
+    Matrix3F &operator*=(const Matrix3F &other) {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            data[i] = data[i] * other.data[i];
+        }
+        return *this;
+    }
+
+    Matrix3F &operator*=(const Vector3F &v) {
+        for (int i = 0; i < n; i++) {
+            data[i] = data[i] * v;
+        }
+        return *this;
+    }
+
+    Matrix3F &operator*=(double value) {
+        int x = (int)value;
+        for (int i = 0; i < n; i++) {
+            data[i] = data[i] * x;
+        }
+        return *this;
+    }
+
+    Matrix3F &operator*=(float value) {
+        return (*this *= (double)value);
+    }
+
+    Matrix3F &operator/=(int value) {
+        if (value == 0) {
+            codeError = 3;
+            return *this;
+        }
+        for (int i = 0; i < n; i++) {
+            data[i] = data[i] / value;
+        }
+        return *this;
+    }
+
+    Matrix3F &operator/=(double value) {
+        return (*this /= (int)value);
+    }
+
+    Matrix3F &operator/=(float value) {
+        return (*this /= (int)value);
+    }
+
+    Matrix3F &operator%=(int value) {
+        if (value == 0) {
+            codeError = 3;
+            return *this;
+        }
+        for (int i = 0; i < n; i++) {
+            data[i] = data[i] % value;
+        }
+        return *this;
+    }
+
+    bool operator==(const Matrix3F &other) const
+    {
+        if (n != other.n) {
+            return false;
+        }
+        for (int i = 0; i < n; i++) {
+            if (data[i] != other.data[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool operator!=(const Matrix3F &other) const
+    {
+        return !(*this == other);
+    }
+
+    bool operator>(const Matrix3F &other) const
+    {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            if (!(data[i] > other.data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool operator>=(const Matrix3F &other) const
+    {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            if (!(data[i] >= other.data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool operator<(const Matrix3F &other) const
+    {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            if (!(data[i] < other.data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool operator<=(const Matrix3F &other) const
+    {
+        int m = n < other.n ? n : other.n;
+        for (int i = 0; i < m; i++) {
+            if (!(data[i] <= other.data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    friend Matrix3F operator+(const Matrix3F &a, const Matrix3F &b);
+    friend Matrix3F operator+(const Matrix3F &a, int value);
+    friend Matrix3F operator+(const Matrix3F &a, double value);
+    friend Matrix3F operator+(const Matrix3F &a, float value);
+    friend Matrix3F operator-(const Matrix3F &a, const Matrix3F &b);
+    friend Matrix3F operator-(const Matrix3F &a, int value);
+    friend Matrix3F operator-(const Matrix3F &a, double value);
+    friend Matrix3F operator-(const Matrix3F &a, float value);
+    friend Matrix3F operator*(const Matrix3F &a, const Matrix3F &b);
+    friend Matrix3F operator*(const Matrix3F &a, const Vector3F &v);
+    friend Matrix3F operator*(const Matrix3F &a, double value);
+    friend Matrix3F operator*(const Matrix3F &a, float value);
+    friend Matrix3F operator/(const Matrix3F &a, const Matrix3F &b);
+    friend Matrix3F operator/(const Matrix3F &a, int value);
+    friend Matrix3F operator/(const Matrix3F &a, float value);
+    friend Matrix3F operator%(const Matrix3F &a, int value);
+    friend istream &operator>>(istream &in, Matrix3F &m);
+    friend ostream &operator<<(ostream &out, const Matrix3F &m);
+
+    void *operator new(size_t sizeObject) {
+        return ::operator new(sizeObject);
+    }
+
+    void operator delete(void *ptr) {
+        ::operator delete(ptr);
+    }
+};
+
+int Matrix3F::count_matrix = 0;
+
+Matrix3F operator+(const Matrix3F &a, const Matrix3F &b) {
+    Matrix3F temp(a);
+    temp += b;
+    return temp;
+}
+
+Matrix3F operator+(const Matrix3F &a, int value) {
+    Matrix3F temp(a);
+    temp += (double)value;
+    return temp;
+}
+
+Matrix3F operator+(const Matrix3F &a, double value) {
+    Matrix3F temp(a);
+    temp += value;
+    return temp;
+}
+
+Matrix3F operator+(const Matrix3F &a, float value) {
+    Matrix3F temp(a);
+    temp += value;
+    return temp;
+}
+
+Matrix3F operator-(const Matrix3F &a, const Matrix3F &b) {
+    Matrix3F temp(a);
+    temp -= b;
+    return temp;
+}
+
+Matrix3F operator-(const Matrix3F &a, int value) {
+    Matrix3F temp(a);
+    temp -= (double)value;
+    return temp;
+}
+
+Matrix3F operator-(const Matrix3F &a, double value) {
+    Matrix3F temp(a);
+    temp -= value;
+    return temp;
+}
+
+Matrix3F operator-(const Matrix3F &a, float value) {
+    Matrix3F temp(a);
+    temp -= value;
+    return temp;
+}
+
+Matrix3F operator*(const Matrix3F &a, const Matrix3F &b) {
+    Matrix3F temp(a);
+    temp *= b;
+    return temp;
+}
+
+Matrix3F operator*(const Matrix3F &a, const Vector3F &v) {
+    Matrix3F temp(a);
+    temp *= v;
+    return temp;
+}
+
+Matrix3F operator*(const Matrix3F &a, double value) {
+    Matrix3F temp(a);
+    temp *= value;
+    return temp;
+}
+
+Matrix3F operator*(const Matrix3F &a, float value) {
+    Matrix3F temp(a);
+    temp *= value;
+    return temp;
+}
+
+Matrix3F operator/(const Matrix3F &a, const Matrix3F &b) {
+    Matrix3F temp(a.otrymatyRozmir());
+    int m = a.otrymatyRozmir() < b.otrymatyRozmir() ? a.otrymatyRozmir() : b.otrymatyRozmir();
+    for (int i = 0; i < m; i++) {
+        int s = a[i].suma() * b[i].suma();
+        temp[i] = Vector3F(s, s, s);
+    }
+    return temp;
+}
+
+Matrix3F operator/(const Matrix3F &a, int value) {
+    Matrix3F temp(a);
+    temp /= value;
+    return temp;
+}
+
+Matrix3F operator/(const Matrix3F &a, float value) {
+    Matrix3F temp(a);
+    temp /= value;
+    return temp;
+}
+
+Matrix3F operator%(const Matrix3F &a, int value) {
+    Matrix3F temp(a);
+    temp %= value;
+    return temp;
+}
+
+istream &operator>>(istream &in, Matrix3F &m) {
+    for (int i = 0; i < m.n; i++) {
+        in >> m.data[i];
+    }
+    return in;
+}
+
+ostream &operator<<(ostream &out, const Matrix3F &m) {
+    for (int i = 0; i < m.n; i++) {
+        out << m.data[i] << "\n";
+    }
+    return out;
+}
+
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
